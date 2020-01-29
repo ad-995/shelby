@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="By Order of the Peaky Blinders" src="https://i.imgur.com/SDsyM4r.png" height="140" border-radius="50%" />
+  <img alt="By Order of the Peaky Blinders" src="https://i.imgur.com/SDsyM4r.png" height="140" style="border-radius:50%" />
   <p align="center">
     <a href="https://github.com/ad-995/shelby/releases/latest"><img alt="Release" src="https://img.shields.io/github/release/ad-995/shelby.svg?style=flat-square"></a>
     <a href="https://github.com/ad-995/shelby/blob/master/LICENSE"><img alt="Software License" src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square"></a>
