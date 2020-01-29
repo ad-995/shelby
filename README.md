@@ -9,28 +9,34 @@
 
 <h5 align="center"><i>Execution Cradle Generation!</i></h5>
 
-`Shelby` is a Execution Cradle Generator inspired by [PoshC2](https://github.com/nettitude/PoshC2/blob/master/poshc2/server/Payloads.py) and their `PoshC2_Project/quickstart.txt` documentation. 
-
-The aim of this project is to automatically generate several commonly used Execution Cradles in the hopes of lateral movement. 
-
 ***
 
 ## Introduction
-Purpose
 
-## Shells
-The available shells
+`Shelby` is a Windows Execution Cradle Generator inspired by [PoshC2](https://github.com/nettitude/PoshC2/blob/master/poshc2/server/Payloads.py) and their `PoshC2_Project/quickstart.txt` documentation. 
+
+The aim of this project is to automatically generate several commonly used Execution Cradles for lateral movement. 
 
 ## Cradles
-The available cradles
+For our initial proof-o'-concept, we have two cradles:
+- `regsvr32`
+- `powershell IEX (...)`
+
+These can be run with any command execution. When `Shelby` is run, the provided snippets will update with the given IP address and port and are available in plaintext and base64-encoded.
+
+## Shells
+Two shells are currently inside `Shelby`, both from [Nishang](https://github.com/samratashok/nishang). We found these to be more reliable:
+- [Invoke-PowerShellTcp](https://github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellTcp.ps1)
+- [Invoke-PowerShellTcpOneLineBind](https://github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellTcpOneLineBind.ps1)
+
+Additional shells coming soon!
 
 ## Modularity
-Adding to Shelby
+Details on how to add cradle and shells to `Shelby` can be found at [ad-995](https://ad-995.group/projects/shelby.html).
 
 ## Example
 Below is an example output:
 ![Shelby Output](https://i.imgur.com/cQPOSOC.png)
-
 
 ## Usage
 ```
@@ -47,10 +53,10 @@ optional arguments:
 ```
 
 There are some important things to note here:
-- `--ip-address`: The IP Address that the `shells` will be coming back to.
-- `--cradle-port`: The Port that the `shells` will be coming back to.
-- `--web-delivery`: The Port that the `cradles` will use to retrieve the `shell`.
-- `--directory`: The Directory in which all the `cradles` and `shells` will be saved to. As well as the `cradle_commands.txt` file.
+- `--ip-address`: The IP address that the `shells` will call back to.
+- `--cradle-port`: The port that the `shells` will call back to.
+- `--web-delivery`: The port that the `cradles` will use to retrieve the `shell`.
+- `--directory`: The directory in which all the `cradles` and `shells` will be saved to, as well as the `cradle_commands.txt` file. You should run your web delivery server here.
 
 The `cradle_commands.txt` file contains all the Execution Cradle commands. For example:
 
