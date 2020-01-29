@@ -153,12 +153,3 @@ def heading(msg):
 	msg = '[+]     %s' % msg
 	l = len(msg)
 	print('%s\n\r%s' % (red_fg(msg),'='*l))
-
-def banner():
-	print('   _____ __         ____         ')
-	print('  / ___// /_  ___  / / /_  __  __')
-	print('  \__ \/ __ \/ _ \/ / __ \/ / / /')
-	print(' ___/ / / / /  __/ / /_/ / /_/ / ')
-	print('/____/_/ /_/\___/_/_.___/\__, /  ')
-	print('                        /____/   ')
-	print()
