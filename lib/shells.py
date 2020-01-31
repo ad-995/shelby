@@ -18,41 +18,42 @@ def replace_template_variables(content):
 		content = content.replace("TEMPLATEPORT",args.cradle_port)
 	return content
 
-def write_shell_out(shell):
+def write_shell_out(filename,content):
 	if args.randomize_names:
 		filename = ''.join(random.choice(string.ascii_lowercase) for i in range(12))
 	else:
-		filename = shell.filename
+		filename = filename
 
 	if not os.path.exists(args.payload_directory):
 		os.mkdir(args.payload_directory)
-
-	filename = args.payload_directory + filename
-	destination_file = open(filename, "w")
-	destination_file.write(shell.content)
-	destination_file.close()
-	return shell
+	location = args.payload_directory + filename
+	with open(location, "w") as destination_file:
+		destination_file.write(content)
+	return filename,location
 
 def nishang_reverse_tcp():
 	name = 'Nishang Reverse TCP'
 	type = 'Reverse TCP'
 	filename = 'Invoke-PowerShellTcp.ps1'
-	location = args.resource_directory+ filename
-	content = open(location).read()
+	path_to_read = args.resource_directory+ filename
+	content = open(path_to_read).read()
 	content = replace_template_variables(content)
+	filename,location = write_shell_out(filename,content)
 	shell = Shell(name,type,filename,location,content)
-	shell = write_shell_out(shell)
+	return shell
+
+	shell = Shell(name,type,filename,location,content)
 	return shell
 
 def nishang_bind_tcp():
 	name = 'Nishang Bind TCP'
 	type = 'Bind TCP'
 	filename = 'Invoke-PowerShellTcpOneLineBind.ps1'
-	location = args.resource_directory+ filename
-	content = open(location).read()
+	path_to_read = args.resource_directory+ filename
+	content = open(path_to_read).read()
 	content = replace_template_variables(content)
+	filename,location = write_shell_out(filename,content)
 	shell = Shell(name,type,filename,location,content)
-	write_shell_out(shell)
 	return shell
 
 def generate_all_shells():
