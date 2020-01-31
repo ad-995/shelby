@@ -83,7 +83,7 @@ def set_cradle(filename, filecontents):
 	destination_file.close()
 
 def register_cradle(cradle_method,filename,random_sct_filename, shellcontent,execution_cradle_command):
-	cradle_dictionary[filename,] = [random_sct_filename,execution_cradle_command]
+	cradle_dictionary[filename] = [random_sct_filename,execution_cradle_command]
 	set_cradle(random_sct_filename, shellcontent)
 	add_cradle_call_command(cradle_method,execution_cradle_command)
 
