@@ -1,7 +1,7 @@
 import base64,os,random,string,gzip 
-
 from lib import arguments
-class Shell:
+
+class Shell: # create a Shell datastore for the each of the following datatypes
 	def __init__(self,name,type,filename,location,content):
 		self.name = name
 		self.type = type
@@ -11,7 +11,7 @@ class Shell:
 
 args = arguments.get_args()
 
-def replace_template_variables(content):
+def replace_template_variables(content): # replace the template variables with the appropriate data
 	if "TEMPLATEIPADDRESS" in content:
 		content = content.replace("TEMPLATEIPADDRESS",args.ip_address)
 	if "TEMPLATEPORT" in content:
@@ -29,8 +29,9 @@ def write_shell_out(filename,content):
 	location = args.payload_directory + filename
 	with open(location, "w") as destination_file:
 		destination_file.write(content)
-	return filename,location
+	return filename,location # write the shell and return the name and location of it
 
+# the following all use a similar structure, fairly self-explanatory.
 def nishang_reverse_tcp():
 	name = 'Nishang Reverse TCP'
 	type = 'Reverse TCP'
@@ -39,9 +40,6 @@ def nishang_reverse_tcp():
 	content = open(path_to_read).read()
 	content = replace_template_variables(content)
 	filename,location = write_shell_out(filename,content)
-	shell = Shell(name,type,filename,location,content)
-	return shell
-
 	shell = Shell(name,type,filename,location,content)
 	return shell
 

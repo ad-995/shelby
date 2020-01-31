@@ -139,8 +139,6 @@ class yellow:
 	def heading(string):
 		print(yellow_bold(string))
 
-
-
 class icons:
 	def bullet():
 		return u'\u2022'
