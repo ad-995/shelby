@@ -1,5 +1,5 @@
 import base64,os,random,string,gzip 
-from lib import arguments
+from lib import arguments,logger
 
 class Shell: # create a Shell datastore for the each of the following datatypes
 	def __init__(self,name,type,filename,location,content):
@@ -10,6 +10,8 @@ class Shell: # create a Shell datastore for the each of the following datatypes
 		self.content = content
 
 args = arguments.get_args()
+absolute_path = os.path.dirname(os.path.realpath(__file__))
+absolute_path=str(absolute_path).replace('/lib','/')
 
 def replace_template_variables(content): # replace the template variables with the appropriate data
 	if "TEMPLATEIPADDRESS" in content:
@@ -25,7 +27,11 @@ def write_shell_out(filename,content):
 		filename = filename
 
 	if not os.path.exists(args.payload_directory):
-		os.mkdir(args.payload_directory)
+		try:
+			os.mkdir(args.payload_directory)
+		except Exception as e:
+			print('Got error: %s' % logger.red_fg(e))
+			quit()
 	location = args.payload_directory + filename
 	with open(location, "w") as destination_file:
 		destination_file.write(content)
@@ -36,7 +42,7 @@ def nishang_reverse_tcp():
 	name = 'Nishang Reverse TCP'
 	type = 'Reverse TCP'
 	filename = 'Invoke-PowerShellTcp.ps1'
-	path_to_read = args.resource_directory+ filename
+	path_to_read = absolute_path + args.resource_directory + filename
 	content = open(path_to_read).read()
 	content = replace_template_variables(content)
 	filename,location = write_shell_out(filename,content)
@@ -47,7 +53,7 @@ def nishang_bind_tcp():
 	name = 'Nishang Bind TCP'
 	type = 'Bind TCP'
 	filename = 'Invoke-PowerShellTcpOneLineBind.ps1'
-	path_to_read = args.resource_directory+ filename
+	path_to_read = absolute_path + args.resource_directory + filename
 	content = open(path_to_read).read()
 	content = replace_template_variables(content)
 	filename,location = write_shell_out(filename,content)
