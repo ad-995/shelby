@@ -36,7 +36,7 @@ Details on how to add cradle and shells to `Shelby` can be found at [ad-995](htt
 
 ## Example
 Below is an example output:
-![Shelby Output](https://i.imgur.com/Q9iepvW.png)
+![Shelby Output](https://i.imgur.com/G0XRmTS.png)
 
 ## Usage
 ```
