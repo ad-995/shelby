@@ -7,6 +7,7 @@ def get_args():
 	parser.add_argument('-w', '--web-delivery', metavar="", default=str(80),help="Port for serving shells")
 	parser.add_argument('-d', '--payload-directory', default="web_delivery/",metavar="", help="Directory for generated payloads")
 	parser.add_argument('-D', '--resource-directory', default="resources/",metavar="", help="Directory for shell resources")
+	parser.add_argument('-o', '--operating-system', default=None,metavar="", help="Generate specific OS Cradles")
 	parser.add_argument('--randomize-names', action="store_true", help="Rename retrieved-shells to random string")
 	args = parser.parse_args()
 

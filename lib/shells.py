@@ -63,6 +63,13 @@ def nishang_bind_tcp():
 def generate_all_shells():
 	# This function takes in all the configured shells and ensures that they are encoded into Base64/UTF16-LE, thats all.
 	shells = []
-	shells.append(nishang_reverse_tcp())
-	shells.append(nishang_bind_tcp())
+	if args.operating_system == None:
+		shells.append(nishang_reverse_tcp())
+		shells.append(nishang_bind_tcp())
+	elif "windows" in args.operating_system.lower():
+		shells.append(nishang_reverse_tcp())
+		shells.append(nishang_bind_tcp())
+	elif "linux" in args.operating_system.lower():
+		print("Coming soon!")
+		quit()
 	return shells
