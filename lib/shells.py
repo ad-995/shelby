@@ -70,6 +70,5 @@ def generate_all_shells():
 		shells.append(nishang_reverse_tcp())
 		shells.append(nishang_bind_tcp())
 	elif "linux" in args.operating_system.lower():
-		print("Coming soon!")
-		quit()
+		shells = None
 	return shells

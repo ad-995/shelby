@@ -17,9 +17,10 @@ def main():
 	print()
 
 	# print out the available shells
-	logger.heading('Shells')
-	for shell in all_shells:
-		logger.bullet('%s: %s' % (logger.yellow_fg(shell.name),shell.location))
+	if all_shells != None:
+		logger.heading('Shells')
+		for shell in all_shells:
+			logger.bullet('%s: %s' % (logger.yellow_fg(shell.name),shell.location))
 
 	# same thing as generate_all_shells()
 	all_cradles = cradles.generate_all_cradles(all_shells)
