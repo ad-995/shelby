@@ -15,7 +15,7 @@
 
 `Shelby` is a Windows Execution Cradle Generator inspired by [PoshC2](https://github.com/nettitude/PoshC2/blob/master/poshc2/server/Payloads.py) and their `PoshC2_Project/quickstart.txt` documentation. 
 
-The aim of this project is to automatically generate several commonly used Execution Cradles for lateral movement. 
+The aim of this project is to automatically generate several commonly used Execution Cradles for lateral movement. Future releases will include some classic Linux cradles too.
 
 ## Cradles
 For our initial proof-o'-concept, we have two cradles:
@@ -29,7 +29,7 @@ Two shells are currently inside `Shelby`, both from [Nishang](https://github.com
 - [Invoke-PowerShellTcp](https://github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellTcp.ps1)
 - [Invoke-PowerShellTcpOneLineBind](https://github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellTcpOneLineBind.ps1)
 
-Additional shells coming soon!
+Additional shells for Windows and Linux coming soon!
 
 ## Modularity
 Details on how to add cradle and shells to `Shelby` can be found at [ad-995](https://ad-995.group/projects/shelby.html).
