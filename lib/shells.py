@@ -2,9 +2,10 @@ import base64,os,random,string,gzip
 from lib import arguments,logger
 
 class Shell: # create a Shell datastore for the each of the following datatypes
-	def __init__(self,name,type,filename,location,content):
+	def __init__(self,name,type,language,filename,location,content):
 		self.name = name
 		self.type = type
+		self.language = language
 		self.filename = filename
 		self.location = location
 		self.content = content
@@ -41,23 +42,25 @@ def write_shell_out(filename,content):
 def nishang_reverse_tcp():
 	name = 'Nishang Reverse TCP'
 	type = 'Reverse TCP'
+	language = 'PowerShell'
 	filename = 'Invoke-PowerShellTcp.ps1'
 	path_to_read = absolute_path + args.resource_directory + filename
 	content = open(path_to_read).read()
 	content = replace_template_variables(content)
 	filename,location = write_shell_out(filename,content)
-	shell = Shell(name,type,filename,location,content)
+	shell = Shell(name,type,language,filename,location,content)
 	return shell
 
 def nishang_bind_tcp():
 	name = 'Nishang Bind TCP'
 	type = 'Bind TCP'
+	language = 'PowerShell'
 	filename = 'Invoke-PowerShellTcpOneLineBind.ps1'
 	path_to_read = absolute_path + args.resource_directory + filename
 	content = open(path_to_read).read()
 	content = replace_template_variables(content)
 	filename,location = write_shell_out(filename,content)
-	shell = Shell(name,type,filename,location,content)
+	shell = Shell(name,type,language,filename,location,content)
 	return shell
 
 def generate_all_shells():
