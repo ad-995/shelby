@@ -16,7 +16,7 @@ def gen():
 	username = getpass.getuser()
 	hostname = socket.gethostname()
 
-	key = RSA.generate(1024)
+	key = RSA.generate(4096)
 
 	pubkey = key.publickey()
 
@@ -28,7 +28,7 @@ def gen():
 	keys = SSH_KEYS(public_key,private_key)
 	if not os.path.exists(args.ssh_directory):
 		os.makedirs(args.ssh_directory)
-		
+
 	with open(args.ssh_directory+'id_rsa.pub','w') as f:
 		f.write(public_key)
 	with open(args.ssh_directory+'id_rsa','w') as f:
