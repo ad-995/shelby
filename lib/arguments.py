@@ -1,5 +1,5 @@
 import argparse
-from lib.logger import version
+from lib import logger
 
 def get_args():
 	parser = argparse.ArgumentParser(description = "Giver of shells")
@@ -14,6 +14,10 @@ def get_args():
 	parser.add_argument('--randomize-names', action="store_true", help="Rename retrieved-shells to random string")
 	parser.add_argument('--version', action="store_true", help="Print current version")
 	args = parser.parse_args()
+
+	if args.ip_address == None:
+		logger.red.fg('Please specify an ip address!')
+		quit()
 
 	if args.version:
 		version()

