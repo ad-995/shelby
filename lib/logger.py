@@ -1,3 +1,7 @@
+def version():
+	v = '1.1'
+	print("(¯`·._.··¸.-~*´¨¯¨`*·~-.,-(%s: %s)-,.-~*´¨¯¨`*·~-.¸··._.·´¯)" % (red_fg('Version'),red_fg(v)))
+
 import os, math
 from time import gmtime, strftime
 

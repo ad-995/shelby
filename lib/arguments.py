@@ -1,18 +1,23 @@
 import argparse
+from lib.logger import version
 
 def get_args():
 	parser = argparse.ArgumentParser(description = "Giver of shells")
-	parser.add_argument('-i', '--ip-address', metavar="",help="Attacker IP Address", required=True)
-	parser.add_argument('-p', '--shell-port', metavar="", default=str(4444),help="Port for receiving shells")
-	parser.add_argument('-s', '--server-port', metavar="", default=str(80),help="Port for serving shells")
-	parser.add_argument('-C', '--cradle-directory', default="cradles/",metavar="", help="Directory for generated payloads")
-	parser.add_argument('-D', '--resource-directory', default="resources/",metavar="", help="Directory for shell resources")
-	parser.add_argument('-S', '--ssh-directory', default="keys/",metavar="", help="Directory for SSH Keys")
-	# parser.add_argument('-o', '--operating-system', default=None,metavar="", help="Generate specific OS Cradles")
+	parser.add_argument('-i', '--ip-address', metavar="127.0.0.1",help="Attacker IP Address")
+	parser.add_argument('-p', '--shell-port', metavar="4444", default=str(4444),help="Port for receiving shells")
+	parser.add_argument('-s', '--server-port', metavar="80", default=str(80),help="Port for serving shells")
+	parser.add_argument('-C', '--cradle-directory', default="cradles/", metavar="cradles", help="Directory for generated payloads")
+	parser.add_argument('-D', '--resource-directory', default="resources/",metavar="resources", help="Directory for shell resources")
+	parser.add_argument('-S', '--ssh-directory', default="keys/",metavar="keys", help="Directory for SSH Keys")
 	parser.add_argument('--linux', action="store_true", help="Only Linux shells")
 	parser.add_argument('--windows',action="store_true", help="Only Windows shells")
 	parser.add_argument('--randomize-names', action="store_true", help="Rename retrieved-shells to random string")
+	parser.add_argument('--version', action="store_true", help="Print current version")
 	args = parser.parse_args()
+
+	if args.version:
+		version()
+		quit()
 
 	if not args.cradle_directory.endswith('/'):
 		args.cradle_directory = args.cradle_directory+'/'
