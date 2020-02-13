@@ -7,13 +7,13 @@ def main():
 	args = arguments.get_args() # get all the arguments
 	absolute_path = os.path.dirname(os.path.realpath(__file__))
 	absolute_path=str(absolute_path).replace('/lib','/')
-	# generate_all_shells() runs through all the various shells that are in shelby and replaces the templates and writes them out to args.payload_directory; it returns a list of shell objects.
-	all_shells = shells.generate_all_shells() # This purely configures the shells and writes them to ./web_delivery.
+	# generate_all_shells() runs through all the various shells that are in shelby and replaces the templates and writes them out to args.cradle_directory; it returns a list of shell objects.
+	all_shells = shells.generate_all_shells() # This purely configures the shells and writes them to ./server_port.
 
 	# print some useful stuff
-	print("The Web Delivery Server is at: %s:%s"  % (logger.red_fg(args.ip_address), logger.red_fg(args.web_delivery)))
-	print("Shells receiving at: %s:%s"  % (logger.red_fg(args.ip_address), logger.red_fg(args.cradle_port)))
-	print("Writing payloads to: %s" % logger.red_fg(args.payload_directory))
+	print("The Web Delivery Server is at: %s:%s"  % (logger.red_fg(args.ip_address), logger.red_fg(args.server_port)))
+	print("Shells receiving at: %s:%s"  % (logger.red_fg(args.ip_address), logger.red_fg(args.shell_port)))
+	print("Writing cradles to: %s" % logger.red_fg(args.cradle_directory))
 	print()
 
 	# print out the available shells
@@ -23,7 +23,7 @@ def main():
 			logger.bullet('%s: %s' % (logger.yellow_fg(shell.name),shell.location))
 
 	logger.heading('SSH Keys')
-	logger.bullet('%s: %s' % (logger.yellow_fg('SSH Keys written to'),args.payload_directory))
+	logger.bullet('%s: %s' % (logger.yellow_fg('SSH Keys written to'),args.ssh_directory))
 
 	# same thing as generate_all_shells()
 	all_cradles = cradles.generate_all_cradles(all_shells)

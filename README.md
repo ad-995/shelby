@@ -72,6 +72,6 @@ Method:
 Cradle Command
 ```
 
-Finally, the easiest usecase here is to serve the `./web_delivery` directory with `python -m SimpleHTTPServer 80`. 
+Finally, the easiest usecase here is to serve the `./server_port` directory with `python -m SimpleHTTPServer 80`. 
 
 A project by [mez-0](https://github.com/mez-0) & [michaelranaldo](https://github.com/michaelranaldo)

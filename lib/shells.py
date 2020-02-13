@@ -19,7 +19,7 @@ def replace_template_variables(content): # replace the template variables with t
 	if "TEMPLATEIPADDRESS" in content:
 		content = content.replace("TEMPLATEIPADDRESS",args.ip_address)
 	if "TEMPLATEPORT" in content:
-		content = content.replace("TEMPLATEPORT",args.cradle_port)
+		content = content.replace("TEMPLATEPORT",args.shell_port)
 	return content
 
 def write_shell_out(filename,content):
@@ -28,13 +28,13 @@ def write_shell_out(filename,content):
 	else:
 		filename = filename
 
-	if not os.path.exists(args.payload_directory):
+	if not os.path.exists(args.cradle_directory):
 		try:
-			os.mkdir(args.payload_directory)
+			os.mkdir(args.cradle_directory)
 		except Exception as e:
 			print('Got error: %s' % logger.red_fg(e))
 			quit()
-	location = args.payload_directory + filename
+	location = args.cradle_directory + filename
 	with open(location, "w") as destination_file:
 		destination_file.write(content)
 	return filename,location # write the shell and return the name and location of it
@@ -80,13 +80,16 @@ def add_ssh_key_sh():
 def generate_all_shells():
 	# This function takes in all the configured shells and ensures that they are encoded into Base64/UTF16-LE, thats all.
 	shells = []
-	if args.operating_system == None:
+	if args.linux == False and args.windows == False:
 		shells.append(nishang_reverse_tcp())
 		shells.append(nishang_bind_tcp())
 		shells.append(add_ssh_key_sh())
-	elif "windows" in args.operating_system.lower():
+
+	elif args.windows:
 		shells.append(nishang_reverse_tcp())
 		shells.append(nishang_bind_tcp())
-	elif "linux" in args.operating_system.lower():
+
+	elif args.linux:
 		shells.append(add_ssh_key_sh())
+
 	return shells

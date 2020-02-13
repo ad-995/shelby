@@ -126,7 +126,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-web_delivery
-web_delivery/*
+cradles/
+cradles/*
+keys/
+keys/*
 *.txt
 
