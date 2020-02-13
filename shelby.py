@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import os
 from time import gmtime, strftime
-from lib import logger, arguments, shells, cradles
+from lib import logger, arguments, shells, cradles, ssh_keys
 
 def main():
 	args = arguments.get_args() # get all the arguments
@@ -21,6 +21,9 @@ def main():
 		logger.heading('Shells')
 		for shell in all_shells:
 			logger.bullet('%s: %s' % (logger.yellow_fg(shell.name),shell.location))
+
+	logger.heading('SSH Keys')
+	logger.bullet('%s: %s' % (logger.yellow_fg('SSH Keys written to'),args.payload_directory))
 
 	# same thing as generate_all_shells()
 	all_cradles = cradles.generate_all_cradles(all_shells)

