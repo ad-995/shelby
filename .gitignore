@@ -131,4 +131,5 @@ cradles/*
 keys/
 keys/*
 *.txt
+experimental_obfuscation/
 experimental_obfuscation/*

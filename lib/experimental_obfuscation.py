@@ -133,21 +133,19 @@ def do_change(cpp_objs,line):
 			if ' wmain(' not in line:
 				line = re.sub(function_match.group(1),cpp_obj.newname,line)
 				return line
-			else:
-				return line
-		return line
+	return line
 
-	for gns_obj in gns_objs:
-		if gns_obj.namespace in line and gns_obj.function in line:
-			return line.replace(gns_obj.namespace,gns_obj.newname,gns_obj.function,gns_obj.newname)
+	# for gns_obj in gns_objs:
+	# 	if gns_obj.namespace in line and gns_obj.function in line:
+	# 		return line.replace(gns_obj.namespace,gns_obj.newname).replace(gns_obj.function,gns_obj.newname)
 
-		elif gns_obj.namespace in line and gns_obj.function not in line:
-			return line.replace(gns_obj.namespace,newname)
+	# 	elif gns_obj.namespace in line and gns_obj.function not in line:
+	# 		return line.replace(gns_obj.namespace,newname)
 
-		elif gns_obj.function in line and gns_obj.namespace not in line:
-			return line.replace(gns_obj.function,newname)
-		else:
-			return line
+	# 	elif gns_obj.function in line and gns_obj.namespace not in line:
+	# 		return line.replace(gns_obj.function,newname)
+	# 	else:
+	# 		return line
 
 def do_name_change(cpp_files,cpp_objs,gns_objs,new_directory,original_root_dir):
 	empty_cpp_files(new_directory)
