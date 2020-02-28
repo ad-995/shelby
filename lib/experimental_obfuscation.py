@@ -4,7 +4,6 @@ from lib import logger,arguments
 
 cpp_function_regex = re.compile(r'^(\w+)\s(\w+)\((.*)\)')
 regex_global_namespace_usage = re.compile(r'(^\w+)(\:\:)(\w+)(.*)')
-
 used_random_names = []
 
 class CPP:
@@ -52,6 +51,11 @@ def empty_cpp_files(root):
 	for cpp_file in cpp_files:
 		open(cpp_file, 'w').close()
 
+def empty_header_files(root):
+	all_files = get_all_files(root)
+	header_files = get_header_files(all_files)
+	for header_file in header_files:
+		open(header_file, 'w').close()
 
 def get_all_files(root):
 	files_sorted = []
@@ -77,6 +81,19 @@ def get_cpp_files(files):
 		return None
 	else:
 		return cpp_files
+
+def get_header_files(files):
+	header_files = []
+	for f in files:
+		mime = mimetypes.guess_type(f)
+		if mime[0] != None:
+			if 'text/x-chdr' in mime[0]:
+				if f not in header_files:
+					header_files.append(f)
+	if len(header_files) == 0:
+		return None
+	else:
+		return header_files
 
 def create_cpp_objs(cpp_files):
 	cpp_objs = []
@@ -112,7 +129,7 @@ def create_globalnamespace(cpp_files):
 					args = match.group(4)
 					newname = random_string()
 					args = match.group(3)
-					if namespace.startswith('I'):
+					if namespace.startswith('I'): #teehee.
 						continue
 					gns_obj = GNS(full,namespace,seperator,function,args,newname)
 					if gns_obj not in gns_objs:
@@ -122,7 +139,7 @@ def create_globalnamespace(cpp_files):
 	else:
 		return gns_objs
 
-def do_change(cpp_objs,line):
+def do_change_function(cpp_objs,line):
 	for cpp_obj in cpp_objs:
 		regex_function_usage = re.compile(r'[\s\,\.\(](%s)[\.\(]' % cpp_obj.name)
 
@@ -135,17 +152,36 @@ def do_change(cpp_objs,line):
 				return line
 	return line
 
-	# for gns_obj in gns_objs:
-	# 	if gns_obj.namespace in line and gns_obj.function in line:
-	# 		return line.replace(gns_obj.namespace,gns_obj.newname).replace(gns_obj.function,gns_obj.newname)
+def do_change_namespace(gns_objs,line):
+	if '#include' in line:
+		return line
 
-	# 	elif gns_obj.namespace in line and gns_obj.function not in line:
-	# 		return line.replace(gns_obj.namespace,newname)
+	for gns_obj in gns_objs:
+		if gns_obj.namespace in line and gns_obj.function in line:
+			return line.replace(gns_obj.namespace,gns_obj.newname).replace(gns_obj.function,gns_obj.newname)
 
-	# 	elif gns_obj.function in line and gns_obj.namespace not in line:
-	# 		return line.replace(gns_obj.function,newname)
-	# 	else:
-	# 		return line
+		elif gns_obj.namespace in line and gns_obj.function not in line:
+			return line.replace(gns_obj.namespace,newname)
+
+		elif gns_obj.function in line and gns_obj.namespace not in line:
+			return line.replace(gns_obj.function,newname)
+	return line
+
+def fix_header_files(header_files,gns_objs,new_directory,original_root_dir):
+	empty_header_files(new_directory)
+	found_namespaces = []
+	for gns_obj in gns_objs:
+		if gns_obj.namespace not in found_namespaces:
+			found_namespaces.append(gns_obj)
+
+	for header_file_path in header_files:
+		with open(header_file_path,'r') as f:
+			for line in f:
+				for gns_obj in found_namespaces:
+					if gns_obj.namespace in line:
+						if '#include' not in line:
+							line = line.replace(gns_obj.namespace,gns_obj.newname)
+				write(line,header_file_path,new_directory,original_root_dir)			
 
 def do_name_change(cpp_files,cpp_objs,gns_objs,new_directory,original_root_dir):
 	empty_cpp_files(new_directory)
@@ -154,7 +190,8 @@ def do_name_change(cpp_files,cpp_objs,gns_objs,new_directory,original_root_dir):
 			for line in f:
 				line = line.strip('\n')
 				if len(line) != 0:
-					line = do_change(cpp_objs,line)
+					line = do_change_function(cpp_objs,line)
+					line = do_change_namespace(gns_objs,line)
 					write(line,cpp_file_path,new_directory,original_root_dir)
 
 def write(line,current_cpp_file_path,new_directory,original_root_dir):
@@ -192,6 +229,11 @@ def obfuscate():
 		print('No cpp files found in %s!' % logger.red_fg(working_directory))
 		return False
 
+	header_files = get_header_files(all_files)
+	if header_files == None:
+		print('No header files found in %s!' % logger.red_fg(working_directory))
+		return False
+
 	cpp_objs = create_cpp_objs(cpp_files)
 	if cpp_objs == None:
 		logger.red.fg('Could not extract cpp functions from cpp files!')
@@ -203,3 +245,4 @@ def obfuscate():
 		return False
 		
 	do_name_change(cpp_files,cpp_objs,gns_objs,new_directory,original_root_dir)
+	fix_header_files(header_files,gns_objs,new_directory,original_root_dir)
