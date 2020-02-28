@@ -11,6 +11,8 @@ def get_args():
 	parser.add_argument('-S', '--ssh-directory', default="keys/",metavar="keys", help="Directory for SSH Keys")
 	parser.add_argument('--linux', action="store_true", help="Only Linux shells")
 	parser.add_argument('--windows',action="store_true", help="Only Windows shells")
+	parser.add_argument('--experimental',action="store_true", help="Run only the Experimental Obfuscator")
+	parser.add_argument('--experimental-args',metavar="./JuicyPotato/", help="Directory for the CPP Project")
 	parser.add_argument('--randomize-names', action="store_true", help="Rename retrieved-shells to random string")
 	parser.add_argument('--version', action="store_true", help="Print current version")
 	args = parser.parse_args()

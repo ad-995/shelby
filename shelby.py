@@ -1,12 +1,17 @@
 #!/usr/bin/python3
 import os
 from time import gmtime, strftime
-from lib import logger, arguments, shells, cradles, ssh_keys
+from lib import logger, arguments, shells, cradles, ssh_keys,experimental_obfuscation
 
 def main():
 	args = arguments.get_args() # get all the arguments
 	absolute_path = os.path.dirname(os.path.realpath(__file__))
 	absolute_path=str(absolute_path).replace('/lib','/')
+
+	if args.experimental:
+		experimental_obfuscation.obfuscate()
+		quit()
+
 	# generate_all_shells() runs through all the various shells that are in shelby and replaces the templates and writes them out to args.cradle_directory; it returns a list of shell objects.
 	all_shells = shells.generate_all_shells() # This purely configures the shells and writes them to ./server_port.
 
