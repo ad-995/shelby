@@ -32,7 +32,7 @@ Two shells are currently inside `Shelby`, both from [Nishang](https://github.com
 Additional shells for Windows and Linux coming soon!
 
 ## Modularity
-Details on how to add cradle and shells to `Shelby` can be found at [ad-995](https://ad-995.group/projects/shelby.html).
+See the [wiki](https://github.com/ad-995/shelby/wiki) for adding to `shelby`!
 
 ## Example
 Below is an example output:
@@ -40,16 +40,30 @@ Below is an example output:
 
 ## Usage
 ```
-usage: shelby.py [-h] -i  [-w] [-p] [-d]
+usage: shelby.py [-h] [-i 127.0.0.1] [-p 4444] [-s 80] [-C cradles]
+                 [-D resources] [-S keys] [--linux] [--windows]
+                 [--randomize-names] [--version]
 
 Giver of shells
 
 optional arguments:
   -h, --help            show this help message and exit
-  -i , --ip-address     Attacker IP Address
-  -p , --cradle-port    Port for receiving shells
-  -w , --web-delivery   Port for serving shells
-  -d , --directory      Directory for generated payloads
+  -i 127.0.0.1, --ip-address 127.0.0.1
+                        Attacker IP Address
+  -p 4444, --shell-port 4444
+                        Port for receiving shells
+  -s 80, --server-port 80
+                        Port for serving shells
+  -C cradles, --cradle-directory cradles
+                        Directory for generated payloads
+  -D resources, --resource-directory resources
+                        Directory for shell resources
+  -S keys, --ssh-directory keys
+                        Directory for SSH Keys
+  --linux               Only Linux shells
+  --windows             Only Windows shells
+  --randomize-names     Rename retrieved-shells to random string
+  --version             Print current version
 ```
 
 There are some important things to note here:
